@@ -4,6 +4,7 @@ var download = require('download');
 var program = require('commander');
 var fs = require('fs');
 var exit = require('exit');
+var winston = require('winston');
 
 var OpenSubtitles = new OS('OSTestUserAgent');
 program.version('1')
@@ -11,10 +12,10 @@ program.version('1')
 program.parse(process.argv);
 var imdbid = program.imdb;
 if (!imdbid) {
-  console.log('IMDB id is mandatory and should be a number');
+  winston.log('error', 'IMDB id is mandatory and should be a number');
   exit(1);
 }
-console.log('Looking for ' + imdbid);
+winston.log('info', 'Looking for ' + imdbid);
 
 OpenSubtitles.api.LogIn('progfool', '', 'en', 'OSTestUserAgent')
     .then(function(res){
@@ -35,23 +36,23 @@ OpenSubtitles.api.LogIn('progfool', '', 'en', 'OSTestUserAgent')
           if (list.length > 0) {
             var link = list[0]['SubDownloadLink'];
             var movieName = list[0]['MovieName'];
-            console.log('Movie :  ' + movieName);
+            winston.log('info', 'Movie :  ' + movieName);
             var location = 'subtitles/' + movieName.replace(/ /g, '_') + '.gz';
-            console.log('Saving in ' + location); 
+            winston.log('info', 'Saving in ' + location); 
             download(link).then(function(data) {
               // Finally save it in the subtitles folder.
               fs.writeFileSync(location, data);
             }).catch(function(err) {
-              console.log(err);
+              winston.log('error', err);
             });
           } else {
-            console.log('No element in list');
+            winston.log('error', 'No element in list');
           }
         }
       }).catch(function(err) {
-        console.log(err);
+        winston.log('error', err);
       });
     })
     .catch(function(err){
-      console.log(err);
+      winston.log('error', err);
     });
