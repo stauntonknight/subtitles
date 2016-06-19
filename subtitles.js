@@ -14,7 +14,7 @@ if (!imdbid) {
   console.log('IMDB id is mandatory and should be a number');
   exit(1);
 }
-console.log("Looking for " + imdbid);
+console.log('Looking for ' + imdbid);
 
 OpenSubtitles.api.LogIn('progfool', '', 'en', 'OSTestUserAgent')
     .then(function(res){
@@ -36,7 +36,7 @@ OpenSubtitles.api.LogIn('progfool', '', 'en', 'OSTestUserAgent')
             var link = list[0]['SubDownloadLink'];
             var movieName = list[0]['MovieName'];
             console.log('Movie :  ' + movieName);
-            var location = 'subtitles/' + movieName.replace(/ /g, "_") + '.gz';
+            var location = 'subtitles/' + movieName.replace(/ /g, '_') + '.gz';
             console.log('Saving in ' + location); 
             download(link).then(function(data) {
               // Finally save it in the subtitles folder.
@@ -50,8 +50,8 @@ OpenSubtitles.api.LogIn('progfool', '', 'en', 'OSTestUserAgent')
         }
       }).catch(function(err) {
         console.log(err);
-      })
+      });
     })
     .catch(function(err){
-        console.log(err);
+      console.log(err);
     });
